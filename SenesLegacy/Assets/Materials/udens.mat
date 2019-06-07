@@ -28,13 +28,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Amount: 0.917
-    - _Foam: 0.83
-    - _Height: 1
+    - _Amount: 0.245
+    - _Foam: 1.44
+    - _Height: 0.339
     - _RandomHeight: 0.5
     - _RandomSpeed: 0.5
     - _Shininess: 0.91
-    - _Speed: 0.618
+    - _Speed: 0.237
     - _WaveHeight: 0.5
     - _WaveLength: 0.5
     - _WaveSpeed: 1
