@@ -8,21 +8,30 @@ public class ShroomSpawnController : MonoBehaviour
     public GameObject[] badShrommPrefabs;
     public int goodShroomCount = 100;
     public int badShroomCount = 50;
-    public Color groundColor1;
-    public Color groundColor2;
 
     public LayerMask groundLayers;
 
-    private void Awake()
+    public Color groundColor1;
+    public Color groundColor2;
+
+    private void Start()
+    {
+        SpawnShrooms();
+    }
+
+    private void SpawnShrooms()
     {
         RaycastHit hit;
 
         int spawnedCount = 0;
+        float breaker = 0;
 
-        while(spawnedCount < goodShroomCount)
+        while(spawnedCount < goodShroomCount && breaker < 100000)
         {
+            breaker++;
             if (Physics.Raycast(Vector3.up * 50 + new Vector3(Random.insideUnitCircle.x * 100f, 0f, Random.insideUnitCircle.y * 100f), -Vector3.up, out hit, 100f, groundLayers))
             {
+                Debug.Log("hit " + hit.collider.gameObject.layer);
                 if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
                 {
                     var tex = hit.transform.GetComponent<Renderer>().material.mainTexture as Texture2D;
@@ -30,35 +39,12 @@ public class ShroomSpawnController : MonoBehaviour
                     pixelUV.x *= tex.width;
                     pixelUV.y *= tex.height;
                     var col = tex.GetPixel((int)pixelUV.x, (int)pixelUV.y);
-                    Debug.Log(col.ToString());
 
-                    //if (col == groundColor1 || col == groundColor2)
+                    if (Mathf.Abs(col.g - groundColor1.g) < 0.1f || Mathf.Abs(col.g - groundColor2.g) < 0.1f)
                     {
                         var instance = Instantiate(goodShroomPrefabs[Random.Range(0, goodShroomPrefabs.Length)], hit.point, Quaternion.Euler(-90f, 0f, 0f));
+                        spawnedCount++;
                     }
-                    spawnedCount++;
-                }
-            }
-        }
-        spawnedCount = 0;
-        while (spawnedCount < badShroomCount)
-        {
-            if (Physics.Raycast(Vector3.up * 50 + new Vector3(Random.insideUnitCircle.x * 100f, 0f, Random.insideUnitCircle.y * 100f), -Vector3.up, out hit, 100f, groundLayers))
-            {
-                if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Water"))
-                {
-                    var tex = hit.transform.GetComponent<Renderer>().material.mainTexture as Texture2D;
-                    var pixelUV = hit.textureCoord;
-                    pixelUV.x *= tex.width;
-                    pixelUV.y *= tex.height;
-                    var col = tex.GetPixel((int)pixelUV.x, (int)pixelUV.y);
-                    Debug.Log(col.ToString());
-
-                    //if (col == groundColor1 || col == groundColor2)
-                    {
-                        var instance = Instantiate(badShrommPrefabs[Random.Range(0, badShrommPrefabs.Length)], hit.point, Quaternion.Euler(-90f, 0f, 0f));
-                    }
-                    spawnedCount++;
                 }
             }
         }
