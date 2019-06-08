@@ -14,13 +14,11 @@ public class ShroomSpawnController : MonoBehaviour
     public Color groundColor1;
     public Color groundColor2;
 
-    private void Start()
+    [ExecuteInEditMode]
+    public void SpawnShrooms()
     {
-        SpawnShrooms();
-    }
+        ClearShrooms();
 
-    private void SpawnShrooms()
-    {
         RaycastHit hit;
 
         int spawnedCount = 0;
@@ -43,10 +41,29 @@ public class ShroomSpawnController : MonoBehaviour
                     if (Mathf.Abs(col.g - groundColor1.g) < 0.1f || Mathf.Abs(col.g - groundColor2.g) < 0.1f)
                     {
                         var instance = Instantiate(goodShroomPrefabs[Random.Range(0, goodShroomPrefabs.Length)], hit.point, Quaternion.Euler(-90f, 0f, 0f));
+                        instance.transform.parent = transform;
                         spawnedCount++;
                     }
                 }
             }
+        }
+    }
+
+    public void ClearShrooms()
+    {
+        Stack<GameObject> childs = new Stack<GameObject>();
+
+        if(transform.childCount > 0)
+        {
+            foreach (Transform shroom in transform)
+            {
+                childs.Push(shroom.gameObject);        
+            }
+        }
+
+        while(childs.Count > 0)
+        {
+            DestroyImmediate(childs.Pop());
         }
     }
 }
