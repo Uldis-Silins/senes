@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public class Catana : MonoBehaviour
 {
     public ShroomController shroomController;
@@ -13,6 +12,8 @@ public class Catana : MonoBehaviour
     public AudioClip[] hitClips;
     public AudioClip[] longSwingClips;
     public AudioClip[] shortSwingClips;
+
+    public LayerMask shroomLayer;
 
     private Rigidbody m_rigidbody;
 
@@ -42,13 +43,12 @@ public class Catana : MonoBehaviour
         }
 
         m_prevDirection = vel;
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Shroom"))
+        RaycastHit hit;
+
+        if(Physics.Raycast(transform.position, transform.forward, out hit, 1f, shroomLayer))
         {
-            shroomController.HandleShroomHit(other);
+            shroomController.HandleShroomHit(hit.collider);
             hitAudioSource.clip = hitClips[Random.Range(0, hitClips.Length)];
             hitAudioSource.Play();
         }
