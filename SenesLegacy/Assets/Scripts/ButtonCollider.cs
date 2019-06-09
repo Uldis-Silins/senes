@@ -6,11 +6,21 @@ public class ButtonCollider : MonoBehaviour
 {
     public UnityEngine.UI.Button button;
 
+    private float m_activationTime;
+
+    private void OnEnable()
+    {
+        m_activationTime = Time.time;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (Time.time - m_activationTime > 3f)
         {
-            button.onClick.Invoke();
+            if (other.CompareTag("Player"))
+            {
+                button.onClick.Invoke();
+            }
         }
     }
 }
