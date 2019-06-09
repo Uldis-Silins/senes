@@ -113,11 +113,13 @@ public class GameManager : MonoBehaviour
         if (m_highscore < shroomController.Score)
         {
             newHigscoreText.enabled = true;
+            highScoreText.text = shroomController.Score.ToString();
             PlayerPrefs.SetInt("highscore", shroomController.Score);
             PlayerPrefs.Save();
 
         }
 
+        shroomController.scoreText.text = "0";
         scoreText.text = shroomController.Score.ToString();
         highScoreText.text = m_highscore.ToString();
 
