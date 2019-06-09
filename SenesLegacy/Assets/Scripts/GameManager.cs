@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("highscore", m_highscore);
             PlayerPrefs.Save();
         }
+        else
+        {
+            m_highscore = PlayerPrefs.GetInt("highscore");
+        }
 
         startScreen.SetActive(true);
     }

@@ -17,11 +17,43 @@ public class ShroomController : MonoBehaviour
     public AudioSource goodShroomAudio;
     public AudioSource badShroomAudio;
 
+    public Renderer hitQuad;
+
     public Text scoreText;
+
+    public AnimationCurve intensityCurve;
+    public AnimationCurve amountCurve;
+    public AnimationCurve colorCurve;
 
     private int m_curDeadShroomIndex = 0;
 
+    private bool m_inHitAnim;
+    private float m_hitAnimTimer;
+    private readonly float m_hitTime = 5f;
+
+    private readonly int m_intensityPropID = Shader.PropertyToID("_Intensity");
+    private readonly int m_amountPropID = Shader.PropertyToID("_Amount");
+    private readonly int m_colorPropID = Shader.PropertyToID("_Color");
+
     public int Score { get; private set; }
+
+    private void Update()
+    {
+        if(m_inHitAnim)
+        {
+            if(m_hitAnimTimer <= 0f)
+            {
+                m_inHitAnim = false;
+                hitQuad.gameObject.SetActive(false);
+            }
+
+            //hitQuad.material.SetColor(Color.white, new Color(0.635294f, ))
+            hitQuad.material.SetFloat(m_intensityPropID, intensityCurve.Evaluate(1f - (m_hitAnimTimer / m_hitTime)));
+            hitQuad.material.SetFloat(m_amountPropID, amountCurve.Evaluate(1f - (m_hitAnimTimer / m_hitTime)));
+
+            m_hitAnimTimer -= Time.deltaTime;
+        }
+    }
 
     public void HandleShroomHit(Collider hit, Vector3 hitPos)
     {
@@ -43,6 +75,10 @@ public class ShroomController : MonoBehaviour
                 scoreText.text = Score.ToString();
                 StartCoroutine(RemoveScoreFeedback());
             }
+
+            m_inHitAnim = true;
+            m_hitAnimTimer = m_hitTime;
+            hitQuad.gameObject.SetActive(true);
         }
         else
         {
