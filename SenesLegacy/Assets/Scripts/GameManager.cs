@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,11 +12,19 @@ public class GameManager : MonoBehaviour
 
     public float gameTime = 180f;
 
-    public UnityEngine.UI.Text timeremainingText;
+    public Text timeremainingText;
+    public GameObject startScreen;
+    public GameObject endScreen;
+
+    public Text scoreText;
+    public Text highScoreText;
+    public Text newHigscoreText;
 
     private float m_gameTimer = 0f;
 
     private List<Shroom> m_nearShrooms;
+
+    private int m_highscore;
 
     private const float NEAR_SHROOM_DISTANCE = 10f;
 
@@ -23,7 +32,18 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        StartGame();
+        //StartGame();
+        shroomController.ToggleShrooms(false);
+        playerWeapon.SetActive(false);
+
+        if(!PlayerPrefs.HasKey("highscore"))
+        {
+            m_highscore = 0;
+            PlayerPrefs.SetInt("highscore", m_highscore);
+            PlayerPrefs.Save();
+        }
+
+        startScreen.SetActive(true);
     }
 
     private void Update()
@@ -74,7 +94,7 @@ public class GameManager : MonoBehaviour
         IsGameActive = true;
         playerWeapon.SetActive(true);
         shroomController.ToggleShrooms(true);
-        hudController.hudCanvas.enabled = true;
+        //hudController.hudCanvas.enabled = true;
 
         m_nearShrooms = new List<Shroom>();
     }
@@ -84,7 +104,20 @@ public class GameManager : MonoBehaviour
         IsGameActive = false;
         playerWeapon.SetActive(false);
         shroomController.ToggleShrooms(false);
-        hudController.hudCanvas.enabled = false;
-        Application.Quit();
+        //hudController.hudCanvas.enabled = false;
+
+        if (m_highscore < shroomController.Score)
+        {
+            newHigscoreText.enabled = true;
+            PlayerPrefs.SetInt("highscore", shroomController.Score);
+            PlayerPrefs.Save();
+
+        }
+
+        scoreText.text = shroomController.Score.ToString();
+        highScoreText.text = m_highscore.ToString();
+
+        shroomController.ResetScore();
+        endScreen.SetActive(true);
     }
 }
