@@ -21,7 +21,7 @@ public class HudController : MonoBehaviour
 
     private void LateUpdate()
     {
-        hudCanvas.transform.position = Vector3.Lerp(hudCanvas.transform.position, mainCam.position, 5f * Time.deltaTime);
-        hudCanvas.transform.rotation = Quaternion.Slerp(hudCanvas.transform.rotation, mainCam.transform.rotation, 5f * Time.deltaTime);
+        hudCanvas.transform.position = Vector3.Lerp(hudCanvas.transform.position, mainCam.position, 10f * Time.deltaTime);
+        hudCanvas.transform.rotation = Quaternion.Slerp(hudCanvas.transform.rotation, mainCam.transform.rotation, 10f * Time.deltaTime);
     }
 }

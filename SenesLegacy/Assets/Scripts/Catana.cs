@@ -48,7 +48,7 @@ public class Catana : MonoBehaviour
 
         if(Physics.Raycast(transform.position, transform.forward, out hit, 1f, shroomLayer))
         {
-            shroomController.HandleShroomHit(hit.collider);
+            shroomController.HandleShroomHit(hit.collider, hit.point);
             hitAudioSource.clip = hitClips[Random.Range(0, hitClips.Length)];
             hitAudioSource.Play();
         }

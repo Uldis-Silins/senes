@@ -12,14 +12,18 @@ public class ShroomController : MonoBehaviour
     public List<Collider> goodShrooms;
     public List<Collider> badShrooms;
 
+    public DeadShroom[] deadShrooms;
+
     public AudioSource goodShroomAudio;
     public AudioSource badShroomAudio;
 
     public Text scoreText;
 
+    private int m_curDeadShroomIndex = 0;
+
     public int Score { get; private set; }
 
-    public void HandleShroomHit(Collider hit)
+    public void HandleShroomHit(Collider hit, Vector3 hitPos)
     {
         if(goodShrooms.Contains(hit))
         {
@@ -46,6 +50,8 @@ public class ShroomController : MonoBehaviour
         }
 
         hit.gameObject.SetActive(false);
+        deadShrooms[m_curDeadShroomIndex % (deadShrooms.Length - 1)].Spawn(hit.transform.position, hit.transform.rotation, hitPos);
+        m_curDeadShroomIndex++;
     }
 
     public void ToggleShrooms(bool enabled)
@@ -75,5 +81,10 @@ public class ShroomController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         OVRInput.SetControllerVibration(0, 0, OVRInput.Controller.All);
         badShroomAudio.Play();
+    }
+
+    public void ResetScore()
+    {
+        Score = 0;
     }
 }
